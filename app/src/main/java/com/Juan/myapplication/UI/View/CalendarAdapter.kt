@@ -1,5 +1,6 @@
 package com.Juan.myapplication.UI.View
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -42,8 +43,11 @@ class CalendarAdapter(
         val eventsForDay =
                 events.filter { event ->
                   try {
+                    // Un evento debe mostrarse si la fecha actual está entre la fecha de inicio y
+                    // fin del evento
                     currentDate >= event.startDate && currentDate <= event.endDate
                   } catch (e: Exception) {
+                    Log.e("CalendarAdapter", "Error comparando fechas: ${e.message}")
                     false
                   }
                 }
@@ -63,6 +67,7 @@ class CalendarAdapter(
         holder.itemView.background = null
       }
     } catch (e: Exception) {
+      Log.e("CalendarAdapter", "Error en onBindViewHolder", e)
       holder.eventTitle.visibility = View.GONE
       holder.itemView.background = null
     }

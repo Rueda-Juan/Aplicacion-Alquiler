@@ -104,6 +104,8 @@ class PersonaFragment : Fragment() {
                 .setPositiveButton("Eliminar") { _, _ ->
                   viewModel.eliminarPersona(p)
                   viewModel.cargarEventosCalendario()
+                  viewModel.cargarAlquileres()
+                  parentFragmentManager.beginTransaction().remove(this).commit()
                 }
                 .setNegativeButton("Cancelar", null)
                 .show()

@@ -58,8 +58,13 @@ class MainViewModel @Inject constructor(private val repository: Repository) : Vi
         val personaEntity = EntityToModel.toPersonaEntity(persona)
         repository.insertarPersona(personaEntity)
         cargarAlquileres()
+        cargarEventosCalendario()
+        withContext(Dispatchers.Main) { _mensaje.value = "Persona guardada exitosamente" }
       } catch (e: Exception) {
-        withContext(Dispatchers.Main) { _error.value = e.message ?: "Error al guardar" }
+        withContext(Dispatchers.Main) {
+          _error.value = e.message ?: "Error al guardar"
+          Log.e("MainViewModel", "Error guardando persona", e)
+        }
       }
     }
   }
@@ -72,31 +77,46 @@ class MainViewModel @Inject constructor(private val repository: Repository) : Vi
 
         personas.forEach { personaEntity ->
           val persona = EntityToModel.toPersona(personaEntity)
-          // Evento de entrada
-          events.add(
-                  CalendarEvent(
-                          persona = persona,
-                          startDate = persona.diaInicial,
-                          endDate = persona.fechaDeSalida(),
-                          type = EventType.ENTRADA,
-                          title = "${persona.nombre}\n ${persona.telefono}"
-                  )
-          )
-          // Evento de salida
-          events.add(
-                  CalendarEvent(
-                          persona = persona,
-                          startDate = persona.fechaDeSalida(),
-                          endDate = persona.fechaDeSalida(),
-                          type = EventType.SALIDA,
-                          title = "${persona.nombre} - Salida"
-                  )
-          )
+          // Verificar que la fecha no sea nula
+          if (persona.diaInicial != null) {
+            // Evento de entrada
+            events.add(
+                    CalendarEvent(
+                            persona = persona,
+                            startDate = persona.diaInicial,
+                            endDate = persona.fechaDeSalida(),
+                            type = EventType.ENTRADA,
+                            title = "${persona.nombre}\n$${persona.alquiler.precioPorDia}/día"
+                    )
+            )
+            // Evento de salida
+            events.add(
+                    CalendarEvent(
+                            persona = persona,
+                            startDate = persona.fechaDeSalida(),
+                            endDate = persona.fechaDeSalida(),
+                            type = EventType.SALIDA,
+                            title = "${persona.nombre} - Salida"
+                    )
+            )
+          }
         }
 
-        withContext(Dispatchers.Main) { _events.postValue(events) }
+        withContext(Dispatchers.Main) {
+          _events.postValue(events)
+          Log.d("MainViewModel", "Eventos cargados: ${events.size}")
+          events.forEach {
+            Log.d(
+                    "MainViewModel",
+                    "Evento: ${it.title}, Inicio: ${it.startDate}, Fin: ${it.endDate}"
+            )
+          }
+        }
       } catch (e: Exception) {
-        withContext(Dispatchers.Main) { _error.postValue("Error al cargar eventos: ${e.message}") }
+        withContext(Dispatchers.Main) {
+          _error.postValue("Error al cargar eventos: ${e.message}")
+          Log.e("MainViewModel", "Error cargando eventos", e)
+        }
       }
     }
   }
@@ -107,7 +127,10 @@ class MainViewModel @Inject constructor(private val repository: Repository) : Vi
         repository.eliminarPersona(persona.id)
         cargarAlquileres()
         cargarEventosCalendario()
-        withContext(Dispatchers.Main) { _mensaje.value = "Persona eliminada con éxito" }
+        withContext(Dispatchers.Main) {
+          _mensaje.value = "Persona eliminada con éxito"
+          _alquileres.value = _alquileres.value?.filter { it.id != persona.id }
+        }
       } catch (e: Exception) {
         withContext(Dispatchers.Main) { _error.value = "Error al eliminar: ${e.message}" }
       }

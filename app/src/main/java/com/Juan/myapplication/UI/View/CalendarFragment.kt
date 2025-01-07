@@ -47,11 +47,13 @@ class CalendarFragment : Fragment(), CalendarAdapter.OnItemListener {
   private fun setupButtons() {
     binding.previousButton.setOnClickListener {
       selectedDate = selectedDate.minusMonths(1)
+      viewModel.cargarEventosCalendario()
       setMonthView()
     }
 
     binding.nextButton.setOnClickListener {
       selectedDate = selectedDate.plusMonths(1)
+      viewModel.cargarEventosCalendario()
       setMonthView()
     }
   }
