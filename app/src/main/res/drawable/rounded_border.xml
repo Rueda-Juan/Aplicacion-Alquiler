@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Fondo del botón -->
+    <solid android:color="#FFFFFF" /> <!-- Fondo blanco -->
+
+    <!-- Borde del botón -->
+    <stroke
+        android:width="2dp"
+        android:color="#686868" /> <!-- Color verde del borde -->
+
+    <!-- Esquinas redondeadas -->
+    <corners android:radius="12dp" />
+</shape>

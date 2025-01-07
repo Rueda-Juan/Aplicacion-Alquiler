@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AlquilerApp</string>
+    <string name="title_activity_main">Gestión de Alquileres</string>
+    <string name="back">Anterior</string>
+    <string name="forward">Siguiente</string>
+    <string name="sunday_short">Dom</string>
+    <string name="monday_short">Lun</string>
+    <string name="tuesday_short">Mar</string>
+    <string name="wednesday_short">Mié</string>
+    <string name="thursday_short">Jue</string>
+    <string name="friday_short">Vie</string>
+    <string name="saturday_short">Sáb</string>
+</resources>
